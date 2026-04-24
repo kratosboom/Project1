@@ -6,7 +6,7 @@
 @php $s = $settings; @endphp
 <div class="mb-8">
     <h1 class="text-2xl font-extrabold tracking-tight text-white sm:text-3xl">Pengaturan situs</h1>
-    <p class="mt-1 text-sm text-gray-400">Nama brand, logo, hero, footer, teks jalan, dan link login / daftar di navigasi depan (kosongkan = pakai default bawaan).</p>
+    <p class="mt-1 text-sm text-gray-400">Nama brand, logo, hero, footer, teks jalan, link login/daftar, teks modal analisis maxwin, dan URL tombol Main / Hajar di beranda.</p>
 </div>
 
 <div class="glass mb-6 max-w-3xl rounded-2xl p-6 sm:p-8">
@@ -69,6 +69,33 @@
         <div>
             <label for="marquee_text" class="mb-1.5 block text-sm font-medium text-slate-300">Teks jalan (marquee)</label>
             <textarea name="marquee_text" id="marquee_text" rows="2" class="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-2.5 text-slate-100 focus:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/30">{{ old('marquee_text', $s['marquee_text'] ?? '') }}</textarea>
+        </div>
+
+        <div class="rounded-xl border border-white/10 bg-black/20 p-4 sm:p-5">
+            <h3 class="text-sm font-bold text-white">Modal analisis maxwin &amp; tombol game</h3>
+            <p class="mt-1 text-xs text-gray-500">Tampilan di kartu game (hover) dan popup setelah &quot;Analisis maxwin&quot;. URL boleh absolut (<code class="text-gray-400">https://...</code>) atau path situs (<code class="text-gray-400">/slug</code>).</p>
+            <div class="mt-4 space-y-4">
+                <div>
+                    <label for="maxwin_modal_kapital_label" class="mb-1.5 block text-sm font-medium text-slate-300">Label blok modal kapital</label>
+                    <input type="text" name="maxwin_modal_kapital_label" id="maxwin_modal_kapital_label" value="{{ old('maxwin_modal_kapital_label', $s['maxwin_modal_kapital_label'] ?? '') }}" maxlength="160" class="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-2.5 text-slate-100 placeholder-slate-500 focus:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/30" placeholder="Modal kapital (IDR)">
+                </div>
+                <div>
+                    <label for="maxwin_default_kapital" class="mb-1.5 block text-sm font-medium text-slate-300">Nilai modal kapital default (IDR)</label>
+                    <input type="text" name="maxwin_default_kapital" id="maxwin_default_kapital" value="{{ old('maxwin_default_kapital', $s['maxwin_default_kapital'] ?? '') }}" inputmode="numeric" pattern="[0-9]*" maxlength="14" class="w-full max-w-xs rounded-xl border border-white/10 bg-black/30 px-4 py-2.5 text-slate-100 placeholder-slate-500 focus:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/30" placeholder="50000 (jika game tidak punya nilai sendiri)">
+                </div>
+                <div>
+                    <label for="maxwin_modal_footer_text" class="mb-1.5 block text-sm font-medium text-slate-300">Teks footer di bawah modal</label>
+                    <input type="text" name="maxwin_modal_footer_text" id="maxwin_modal_footer_text" value="{{ old('maxwin_modal_footer_text', $s['maxwin_modal_footer_text'] ?? '') }}" maxlength="500" class="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-2.5 text-slate-100 placeholder-slate-500 focus:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/30" placeholder="Engine powered by brand analytics">
+                </div>
+                <div>
+                    <label for="main_sekarang_url" class="mb-1.5 block text-sm font-medium text-slate-300">URL tombol &quot;Main Sekarang&quot; (hover kartu)</label>
+                    <input type="text" name="main_sekarang_url" id="main_sekarang_url" value="{{ old('main_sekarang_url', $s['main_sekarang_url'] ?? '') }}" class="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-2.5 text-slate-100 placeholder-slate-500 focus:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/30" placeholder="https://... atau /promo">
+                </div>
+                <div>
+                    <label for="hajar_sekarang_url" class="mb-1.5 block text-sm font-medium text-slate-300">URL tombol &quot;Hajar sekarang&quot; (di modal)</label>
+                    <input type="text" name="hajar_sekarang_url" id="hajar_sekarang_url" value="{{ old('hajar_sekarang_url', $s['hajar_sekarang_url'] ?? '') }}" class="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-2.5 text-slate-100 placeholder-slate-500 focus:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/30" placeholder="https://...">
+                </div>
+            </div>
         </div>
 
         <div>

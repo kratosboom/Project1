@@ -3,6 +3,39 @@
 @php
     $brand = $site['brand_name'] ?? config('app.name');
     $hero = $site['hero_banner_url'] ?? null;
+
+    $footerEngine = trim((string) ($site['maxwin_modal_footer_text'] ?? ''));
+    if ($footerEngine === '') {
+        $footerEngine = 'Engine powered by brand analytics';
+    }
+    $kapLabel = trim((string) ($site['maxwin_modal_kapital_label'] ?? ''));
+    if ($kapLabel === '') {
+        $kapLabel = 'Modal kapital (IDR)';
+    }
+    $defKapStr = trim((string) ($site['maxwin_default_kapital'] ?? ''));
+    $defKap = $defKapStr !== '' ? max(1, (int) $defKapStr) : 50000;
+
+    $resolveCta = static function (?string $raw): array {
+        $u = trim((string) $raw);
+        if ($u === '') {
+            return ['href' => '#', 'enabled' => false, 'target' => null, 'rel' => 'nofollow'];
+        }
+        if (str_starts_with($u, '//') || str_starts_with($u, 'http://') || str_starts_with($u, 'https://')) {
+            $href = $u;
+        } else {
+            $href = url($u);
+        }
+        $ext = str_starts_with($href, 'http://') || str_starts_with($href, 'https://') || str_starts_with($href, '//');
+
+        return [
+            'href' => $href,
+            'enabled' => true,
+            'target' => $ext ? '_blank' : null,
+            'rel' => $ext ? 'noopener noreferrer' : null,
+        ];
+    };
+    $mainCta = $resolveCta($site['main_sekarang_url'] ?? null);
+    $hajarCta = $resolveCta($site['hajar_sekarang_url'] ?? null);
 @endphp
 
 @section('title', $brand.' — RTP & demo')
@@ -80,7 +113,7 @@
                 $pola = $g->pola ?? ['turbo' => '20X', 'auto' => '50X', 'manual' => '100X'];
                 $isBest = $g->is_best;
                 $modal = $g->modal_data ?? [];
-                $mKap = (int) ($modal['kapital'] ?? 50000);
+                $mKap = (int) ($modal['kapital'] ?? $defKap);
                 $mPred = (int) ($modal['prediksi'] ?? round($mKap * 38.5 * ($g->rtp / 100)));
                 $mWr = $modal['winrate'] ?? round(min(98.5, (float) $g->rtp - 1.2 + (crc32($g->name) % 7) * 0.15), 1);
                 $mStars = (int) min(5, max(1, $modal['stars'] ?? 5));
@@ -99,7 +132,17 @@
                     @endif
                     <img src="{{ $g->image_url }}" alt="{{ $g->name }}" loading="lazy" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" onerror="this.onerror=null;this.src='https://placehold.co/400x400/111827/ffffff?text={{ urlencode($g->name) }}'">
                     <div class="absolute inset-0 hidden items-center justify-center bg-black/60 opacity-0 transition-opacity duration-300 group-hover/image:opacity-100 md:flex">
-                        <a href="#" class="btn-primary transform translate-y-4 rounded-xl px-6 py-2.5 text-[11px] font-black uppercase tracking-widest shadow-2xl transition-transform duration-300 group-hover/image:translate-y-0" rel="nofollow" onclick="return false;">Main Sekarang</a>
+                        <a
+                            href="{{ $mainCta['href'] }}"
+                            class="btn-primary transform translate-y-4 rounded-xl px-6 py-2.5 text-[11px] font-black uppercase tracking-widest shadow-2xl transition-transform duration-300 group-hover/image:translate-y-0"
+                            @if($mainCta['enabled'])
+                                @if(!empty($mainCta['target'])) target="{{ $mainCta['target'] }}" @endif
+                                @if(!empty($mainCta['rel'])) rel="{{ $mainCta['rel'] }}" @endif
+                            @else
+                                rel="nofollow"
+                                onclick="return false;"
+                            @endif
+                        >Main Sekarang</a>
                     </div>
                 </div>
                 <div class="flex min-h-0 flex-1 flex-col p-4 text-center sm:p-5">
@@ -201,7 +244,7 @@
             </div>
 
             <div class="mb-4">
-                <p class="mb-1.5 text-[10px] font-bold uppercase tracking-widest text-gray-500">Modal kapital (IDR)</p>
+                <p class="mb-1.5 text-[10px] font-bold uppercase tracking-widest text-gray-500">{{ $kapLabel }}</p>
                 <div class="rounded-2xl border border-white/10 bg-black/50 py-4 text-center">
                     <span id="maxwinKapital" class="text-2xl font-black tabular-nums text-white">0</span>
                 </div>
@@ -231,17 +274,22 @@
             </div>
 
             <a
-                href="#"
+                href="{{ $hajarCta['href'] }}"
                 class="js-maxwin-cta btn-primary mb-5 flex w-full items-center justify-center gap-2 rounded-2xl py-4 text-sm font-black uppercase tracking-widest shadow-lg shadow-primary/30"
-                rel="nofollow"
-                onclick="return false;"
+                @if($hajarCta['enabled'])
+                    @if(!empty($hajarCta['target'])) target="{{ $hajarCta['target'] }}" @endif
+                    @if(!empty($hajarCta['rel'])) rel="{{ $hajarCta['rel'] }}" @endif
+                @else
+                    rel="nofollow"
+                    onclick="return false;"
+                @endif
             >
                 <i class="fas fa-bolt" aria-hidden="true"></i>
                 HAJAR SEKARANG
             </a>
 
             <p class="text-center text-[9px] font-bold uppercase tracking-widest text-gray-600">
-                Engine powered by brand analytics
+                {{ $footerEngine }}
             </p>
         </div>
     </div>

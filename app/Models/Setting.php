@@ -67,6 +67,11 @@ class Setting extends Model
             'register_url' => null,
             'marquee_text' => null,
             'theme_preset' => 'crimson',
+            'maxwin_modal_kapital_label' => null,
+            'maxwin_default_kapital' => null,
+            'maxwin_modal_footer_text' => null,
+            'main_sekarang_url' => null,
+            'hajar_sekarang_url' => null,
         ];
     }
 }

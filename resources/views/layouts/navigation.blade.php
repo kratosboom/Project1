@@ -3,7 +3,7 @@
         <div class="flex h-16 items-center justify-between">
             <div class="flex min-w-0 items-center gap-4 sm:gap-6">
                 <a href="{{ route('home') }}" class="flex shrink-0 items-center gap-2 text-white">
-                    <img src="https://asset.t99group.com/assets/logo/TOKYO99/favicon.png" alt="" class="h-9 w-9 object-contain" width="36" height="36">
+                    <img src="https://asset.t99group.com/assets/logo/TOKYO99/favicon.png" alt="" class="h-9 w-9 shrink-0 object-contain" width="36" height="36">
                     <span class="truncate text-base font-extrabold tracking-tight sm:text-lg">{{ config('app.name') }}</span>
                 </a>
                 <a href="{{ route('home') }}" class="hidden text-sm text-gray-400 hover:text-white sm:inline">Beranda</a>

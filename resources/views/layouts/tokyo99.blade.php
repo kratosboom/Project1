@@ -17,11 +17,11 @@
         $linkLogin = $urlLogin ? (str_starts_with($urlLogin, 'http') || str_starts_with($urlLogin, '//') ? $urlLogin : url($urlLogin)) : route('login');
         $linkDaftar = $urlDaftar ? (str_starts_with($urlDaftar, 'http') || str_starts_with($urlDaftar, '//') ? $urlDaftar : url($urlDaftar)) : '#';
     @endphp
-    <nav class="sticky top-0 z-50 border-b border-white/5 glass py-4 px-6">
-        <div class="mx-auto flex max-w-7xl items-center justify-between">
+    <nav class="sticky top-0 z-50 flex h-16 items-center border-b border-white/5 glass px-6">
+        <div class="mx-auto flex h-full w-full max-w-7xl items-center justify-between">
             <div class="flex items-center gap-4">
                 <a href="{{ route('home') }}" class="flex items-center gap-2">
-                    <img src="{{ $navLogo }}" alt="" class="h-10 w-10 object-contain" width="40" height="40">
+                    <img src="{{ $navLogo }}" alt="" class="h-10 w-10 shrink-0 object-contain" width="40" height="40">
                     <span class="text-lg font-extrabold tracking-tight text-white">{{ $navBrand }}</span>
                 </a>
                 <a href="{{ route('testimoni') }}" class="hidden text-sm text-gray-400 hover:text-white sm:inline">Testimoni</a>
