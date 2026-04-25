@@ -32,6 +32,7 @@
                 <th class="px-4 py-3">Email</th>
                 <th class="px-4 py-3">Verifikasi email</th>
                 <th class="px-4 py-3">Dibuat</th>
+                <th class="px-4 py-3 w-40 text-right">Aksi</th>
             </tr>
         </thead>
         <tbody class="divide-y divide-white/5">
@@ -43,10 +44,22 @@
                     <td class="px-4 py-3">{{ $user->email }}</td>
                     <td class="px-4 py-3">{{ $user->email_verified_at ? 'Ya' : 'Belum' }}</td>
                     <td class="px-4 py-3">{{ $user->created_at?->format('d M Y H:i') }}</td>
+                    <td class="px-4 py-3 text-right">
+                        <div class="inline-flex items-center gap-3">
+                            <a href="{{ route('admin.users.edit', $user) }}" class="text-primary hover:underline">Edit</a>
+                            @if(auth()->id() !== $user->id)
+                                <form method="post" action="{{ route('admin.users.destroy', $user) }}" onsubmit="return confirm('Hapus user ini?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-rose-300 hover:underline">Hapus</button>
+                                </form>
+                            @endif
+                        </div>
+                    </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="4" class="px-4 py-8 text-center text-gray-500">Belum ada user.</td>
+                    <td colspan="5" class="px-4 py-8 text-center text-gray-500">Belum ada user.</td>
                 </tr>
             @endforelse
         </tbody>

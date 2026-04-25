@@ -65,7 +65,7 @@ Route::middleware('auth')->group(function () {
         ->names('admin.halaman');
 
     Route::resource('admin/users', UserController::class)
-        ->only(['index', 'create', 'store'])
+        ->except(['show'])
         ->names('admin.users');
 });
 
