@@ -55,6 +55,11 @@
             Halaman baru
         </a>
 
+        <a href="{{ route('admin.users.index') }}" x-on:click="sidebarOpen = false" class="{{ $linkBase }} {{ request()->routeIs('admin.users.*') ? $linkActive : $linkIdle }}">
+            <svg class="h-5 w-5 shrink-0 opacity-80" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a8.97 8.97 0 0 0 3.75 1.04m-7.5-1.04a8.97 8.97 0 0 1-3.75 1.04m11.25-1.04a9 9 0 1 0-11.25 0m11.25 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-3.75-.82m7.5 0v-.001M15 11.25a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
+            User admin
+        </a>
+
         <p class="mb-2 mt-6 px-3 text-[10px] font-bold uppercase tracking-wider text-gray-600">Situs</p>
 
         <a href="{{ route('home') }}" x-on:click="sidebarOpen = false" class="{{ $linkBase }} {{ $linkIdle }}">

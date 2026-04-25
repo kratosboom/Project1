@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\GameProviderController;
 use App\Http\Controllers\Admin\SiteSettingController;
 use App\Http\Controllers\Admin\TestimonyAdminController;
 use App\Http\Controllers\Admin\ThemeController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\GameClickController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
@@ -62,6 +63,10 @@ Route::middleware('auth')->group(function () {
         ->except(['show'])
         ->parameters(['halaman' => 'page'])
         ->names('admin.halaman');
+
+    Route::resource('admin/users', UserController::class)
+        ->only(['index', 'create', 'store'])
+        ->names('admin.users');
 });
 
 require __DIR__.'/auth.php';
