@@ -26,6 +26,9 @@
                 </a>
                 <a href="{{ route('testimoni') }}" class="hidden text-sm text-gray-400 hover:text-white sm:inline">Testimoni</a>
                 <a href="{{ route('bukti_jackpot') }}" class="hidden text-sm text-gray-400 hover:text-white sm:inline">Bukti Jackpot</a>
+                @foreach(($navPages ?? collect()) as $navPage)
+                    <a href="{{ route('halaman.show', $navPage->slug) }}" class="hidden text-sm text-gray-400 hover:text-white sm:inline">{{ $navPage->title }}</a>
+                @endforeach
             </div>
             <div class="flex space-x-3">
                 <a href="{{ $linkLogin }}" class="rounded-full btn-secondary px-4 py-2 text-sm font-bold sm:px-6">LOGIN</a>
