@@ -8,6 +8,32 @@
     <p class="mt-1 text-sm text-gray-400">Aktivitas singkat situs dan akses cepat ke pengelolaan konten.</p>
 </div>
 
+<div class="glass mb-6 rounded-2xl border border-white/10 p-5 sm:p-6">
+    <div class="flex flex-wrap items-start justify-between gap-4">
+        <div>
+            <p class="text-xs font-bold uppercase tracking-wider text-gray-500">Livescore · API-Sports</p>
+            @if(! $livescore['configured'])
+                <p class="mt-2 text-sm text-amber-300">API_SPORTS_KEY belum diisi di file .env server.</p>
+            @else
+                <p class="mt-2 text-3xl font-extrabold tabular-nums text-white">
+                    {{ $livescore['quota']['remaining'] ?? '—' }}<span class="text-base font-medium text-gray-500"> / {{ $livescore['quota']['limit'] ?? config('livescore.quota.daily_limit') }} request tersisa hari ini</span>
+                </p>
+            @endif
+            <p class="mt-2 text-sm text-gray-400">
+                {{ number_format($livescore['fixtures']) }} pertandingan tersimpan · {{ $livescore['leagues'] }} liga dipantau ·
+                Sinkron terakhir: {{ $livescore['lastSync'] ? $livescore['lastSync']->timezone(config('livescore.timezone'))->locale('id')->translatedFormat('j M Y, H:i').' WIB' : 'belum pernah' }}
+            </p>
+        </div>
+        @if($livescore['configured'])
+            <form method="post" action="{{ route('admin.livescore.sync') }}">
+                @csrf
+                <button type="submit" class="rounded-xl bg-primary px-5 py-2.5 text-sm font-bold text-black transition hover:brightness-110">Sinkron skor sekarang</button>
+                <p class="mt-1.5 text-[11px] text-gray-500">Memakai 1 request. Maks 2× per 10 menit.</p>
+            </form>
+        @endif
+    </div>
+</div>
+
 <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
     <a href="{{ route('admin.pengaturan.edit') }}" class="group glass rounded-2xl border border-white/10 p-5 transition hover:border-primary/30">
         <p class="text-xs font-bold uppercase tracking-wider text-gray-500">Pengaturan</p>

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\League;
 use App\Models\Page;
 use App\Models\Setting;
 use App\Support\ThemePalette;
@@ -31,6 +32,7 @@ class AppServiceProvider extends ServiceProvider
                 'layouts.app',
                 'layouts.guest',
                 'home',
+                'livescore.*',
             ],
             function ($view) {
                 $site = Setting::asArray();
@@ -44,6 +46,14 @@ class AppServiceProvider extends ServiceProvider
                         ->get(['id', 'title', 'slug'])
                     : collect();
                 $view->with('navPages', $navPages);
+
+                $navLeagues = Schema::hasTable('leagues')
+                    ? League::query()
+                        ->whereIn('api_id', config('livescore.leagues', []))
+                        ->orderBy('sort_order')
+                        ->get(['id', 'api_id', 'name', 'slug', 'logo'])
+                    : collect();
+                $view->with('navLeagues', $navLeagues);
             }
         );
     }

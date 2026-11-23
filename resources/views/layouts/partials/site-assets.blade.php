@@ -31,6 +31,7 @@
         --line: color-mix(in srgb, var(--primary) 22%, transparent);
         --surface: color-mix(in srgb, var(--secondary) 14%, var(--bg) 86%);
         --surface-2: color-mix(in srgb, var(--secondary) 22%, var(--bg) 78%);
+        --live: #ff5d5d;
     }
     html { scroll-behavior: smooth; }
     body {
@@ -124,6 +125,28 @@
     .live-dot { animation: live-blink 1.6s ease-in-out infinite; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* ---- Livescore ---- */
+    .match-row { transition: background .2s ease; }
+    .match-row:hover { background: rgba(255,255,255,.03); }
+    .match-row.is-live { background: linear-gradient(90deg, color-mix(in srgb, var(--live) 9%, transparent), transparent 40%); }
+    .team-initials {
+        display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; border-radius: 999px;
+        background: color-mix(in srgb, var(--secondary) 45%, #000); color: var(--gold-soft);
+        border: 1px solid var(--line); font-weight: 700; letter-spacing: .02em;
+    }
+    .date-tab { border-color: rgba(255,255,255,.07); color: var(--muted); background: rgba(255,255,255,.02); transition: all .2s ease; }
+    .date-tab:hover { color: var(--ink); border-color: var(--line); }
+    .date-tab.is-active { color: #15110a; background: linear-gradient(135deg, var(--gold-soft), var(--gold)); border-color: transparent; }
+    .live-badge {
+        display: inline-flex; align-items: center; border-radius: 999px; padding: .2rem .6rem;
+        background: color-mix(in srgb, var(--live) 16%, transparent); color: var(--live);
+        font-size: .65rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; font-variant-numeric: tabular-nums;
+    }
+    .rank-pill { display: inline-flex; width: 1.6rem; height: 1.6rem; align-items: center; justify-content: center; border-radius: .5rem; font-size: .75rem; color: var(--muted); }
+    .rank-pill.is-zone { background: color-mix(in srgb, var(--gold) 16%, transparent); color: var(--gold); font-weight: 700; }
+    .form-dot { display: inline-flex; width: 1.25rem; height: 1.25rem; align-items: center; justify-content: center; border-radius: .35rem; font-size: .6rem; font-weight: 700; color: #0b0b0b; }
+    .form-w { background: #34d399; } .form-d { background: #9ca3af; } .form-l { background: #f87171; }
     :focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
     details > summary { list-style: none; }
     details > summary::-webkit-details-marker { display: none; }

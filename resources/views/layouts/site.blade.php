@@ -2,14 +2,15 @@
     $navBrand = $site['brand_name'] ?? config('app.name');
     $navLogo = $site['logo_url'] ?? asset('favicon.ico');
 
-    $seoTitle = trim($__env->yieldContent('title')) ?: $navBrand;
-    $seoDesc = trim($__env->yieldContent('meta_description'))
+    $seoTitle = html_entity_decode(trim($__env->yieldContent('title')), ENT_QUOTES | ENT_HTML5) ?: $navBrand;
+    $seoDesc = html_entity_decode(trim($__env->yieldContent('meta_description')), ENT_QUOTES | ENT_HTML5)
         ?: $navBrand.' — skor langsung, jadwal, dan hasil pertandingan sepak bola terkini.';
     $seoImage = $navLogo;
     $seoUrl = url()->full();
 
     $navLinks = collect([
-        ['label' => 'Beranda', 'href' => route('home'), 'active' => request()->routeIs('home')],
+        ['label' => 'Skor Live', 'href' => route('home'), 'active' => request()->routeIs('home')],
+        ['label' => 'Jadwal Besok', 'href' => route('jadwal', \Illuminate\Support\Carbon::now(config('livescore.timezone'))->addDay()->toDateString()), 'active' => request()->routeIs('jadwal')],
     ])->merge(($navPages ?? collect())->map(fn ($p) => [
         'label' => $p->title,
         'href' => route('halaman.show', $p->slug),
@@ -57,7 +58,11 @@
         <div class="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-4 px-4 sm:h-[72px] sm:px-6">
             <a href="{{ route('home') }}" class="flex min-w-0 items-center gap-3" aria-label="{{ $navBrand }} — Beranda">
                 <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border hairline bg-black/30 p-1.5">
-                    <img src="{{ $navLogo }}" alt="Logo {{ $navBrand }}" class="h-full w-full object-contain" width="40" height="40">
+                    @if(!empty($site['logo_url']))
+                        <img src="{{ $site['logo_url'] }}" alt="Logo {{ $navBrand }}" class="h-full w-full object-contain" width="40" height="40">
+                    @else
+                        <i class="far fa-futbol text-lg text-[color:var(--gold)]" aria-hidden="true"></i>
+                    @endif
                 </span>
                 <span class="truncate font-display text-xl font-semibold leading-none tracking-wide text-[color:var(--ink)] sm:text-2xl">{{ $navBrand }}</span>
             </a>
@@ -101,16 +106,26 @@
     </main>
 
     <footer class="mt-16 border-t hairline bg-black/20">
-        <div class="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-[1.4fr_1fr]">
+        <div class="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-[1.2fr_1fr_1fr]">
             <div>
                 <a href="{{ route('home') }}" class="font-display text-3xl font-semibold text-[color:var(--ink)]">{{ $navBrand }}</a>
                 @if(!empty($site['footer_text']))
                     <p class="mt-4 max-w-xl text-sm leading-relaxed text-[color:var(--muted)]">{!! nl2br(e($site['footer_text'])) !!}</p>
                 @endif
             </div>
+            @if(($navLeagues ?? collect())->isNotEmpty())
+                <nav aria-label="Liga">
+                    <p class="ornament mb-4 justify-start [&::before]:hidden">Liga</p>
+                    <ul class="space-y-3 text-sm">
+                        @foreach($navLeagues as $l)
+                            <li><a href="{{ route('liga.show', $l) }}" class="text-[color:var(--muted)] transition-colors hover:text-[color:var(--gold)]">{{ $l->displayName() }}</a></li>
+                        @endforeach
+                    </ul>
+                </nav>
+            @endif
             <nav aria-label="Tautan footer">
                 <p class="ornament mb-4 justify-start [&::before]:hidden">Jelajahi</p>
-                <ul class="grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
+                <ul class="space-y-3 text-sm">
                     @foreach($navLinks as $link)
                         <li><a href="{{ $link['href'] }}" class="text-[color:var(--muted)] transition-colors hover:text-[color:var(--gold)]">{{ $link['label'] }}</a></li>
                     @endforeach
