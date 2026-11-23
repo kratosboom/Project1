@@ -68,7 +68,7 @@ class ThemePalette
     public static function resolve(?string $key): array
     {
         $presets = self::presets();
-        $key = is_string($key) && isset($presets[$key]) ? $key : 'crimson';
+        $key = is_string($key) && isset($presets[$key]) ? $key : 'zamrud-emas';
         $theme = $presets[$key];
 
         return [

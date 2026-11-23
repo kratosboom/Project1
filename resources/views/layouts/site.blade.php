@@ -1,21 +1,15 @@
 @php
     $navBrand = $site['brand_name'] ?? config('app.name');
-    $navLogo = $site['logo_url'] ?? 'https://asset.t99group.com/assets/logo/TOKYO99/favicon.png';
-    $urlLogin = $site['login_url'] ?? null;
-    $urlDaftar = $site['register_url'] ?? null;
-    $linkLogin = $urlLogin ? (str_starts_with($urlLogin, 'http') || str_starts_with($urlLogin, '//') ? $urlLogin : url($urlLogin)) : route('login');
-    $linkDaftar = $urlDaftar ? (str_starts_with($urlDaftar, 'http') || str_starts_with($urlDaftar, '//') ? $urlDaftar : url($urlDaftar)) : '#';
+    $navLogo = $site['logo_url'] ?? asset('favicon.ico');
 
     $seoTitle = trim($__env->yieldContent('title')) ?: $navBrand;
     $seoDesc = trim($__env->yieldContent('meta_description'))
-        ?: 'Info RTP live slot hari ini, jam gacor dan pola gacor terbaru dari berbagai provider di '.$navBrand.'.';
-    $seoImage = $site['hero_banner_url'] ?? $navLogo;
+        ?: $navBrand.' — skor langsung, jadwal, dan hasil pertandingan sepak bola terkini.';
+    $seoImage = $navLogo;
     $seoUrl = url()->full();
 
     $navLinks = collect([
         ['label' => 'Beranda', 'href' => route('home'), 'active' => request()->routeIs('home')],
-        ['label' => 'Testimoni', 'href' => route('testimoni'), 'active' => request()->routeIs('testimoni')],
-        ['label' => 'Bukti Jackpot', 'href' => route('bukti_jackpot'), 'active' => request()->routeIs('bukti_jackpot')],
     ])->merge(($navPages ?? collect())->map(fn ($p) => [
         'label' => $p->title,
         'href' => route('halaman.show', $p->slug),
@@ -43,8 +37,8 @@
     <meta name="twitter:title" content="{{ $seoTitle }}">
     <meta name="twitter:description" content="{{ $seoDesc }}">
     <meta name="twitter:image" content="{{ $seoImage }}">
-    <link rel="icon" type="image/png" href="{{ $site['favicon_url'] ?? $site['logo_url'] ?? 'https://asset.t99group.com/assets/logo/TOKYO99/favicon.png' }}">
-    @include('layouts.partials.tokyo99-assets')
+    <link rel="icon" href="{{ $site['favicon_url'] ?? $site['logo_url'] ?? asset('favicon.ico') }}">
+    @include('layouts.partials.site-assets')
     <script type="application/ld+json">
         {!! json_encode([
             '@context' => 'https://schema.org',
@@ -61,48 +55,41 @@
 
     <header class="glass sticky top-0 z-50 border-x-0 border-t-0 hairline">
         <div class="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-4 px-4 sm:h-[72px] sm:px-6">
-            <div class="flex min-w-0 items-center gap-8">
-                <a href="{{ route('home') }}" class="flex min-w-0 items-center gap-3" aria-label="{{ $navBrand }} — Beranda">
-                    <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border hairline bg-black/30 p-1.5">
-                        <img src="{{ $navLogo }}" alt="Logo {{ $navBrand }}" class="h-full w-full object-contain" width="40" height="40">
-                    </span>
-                    <span class="truncate font-display text-xl font-semibold sm:text-2xl leading-none tracking-wide text-[color:var(--ink)]">{{ $navBrand }}</span>
-                </a>
-                <nav aria-label="Navigasi utama" class="hidden lg:block">
-                    <ul class="flex items-center gap-7">
+            <a href="{{ route('home') }}" class="flex min-w-0 items-center gap-3" aria-label="{{ $navBrand }} — Beranda">
+                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border hairline bg-black/30 p-1.5">
+                    <img src="{{ $navLogo }}" alt="Logo {{ $navBrand }}" class="h-full w-full object-contain" width="40" height="40">
+                </span>
+                <span class="truncate font-display text-xl font-semibold leading-none tracking-wide text-[color:var(--ink)] sm:text-2xl">{{ $navBrand }}</span>
+            </a>
+            <nav aria-label="Navigasi utama" class="hidden md:block">
+                <ul class="flex items-center gap-7">
+                    @foreach($navLinks as $link)
+                        <li>
+                            <a href="{{ $link['href'] }}" class="relative py-2 text-[13px] font-medium tracking-wide transition-colors {{ $link['active'] ? 'text-[color:var(--gold)]' : 'text-[color:var(--muted)] hover:text-[color:var(--ink)]' }}" @if($link['active']) aria-current="page" @endif>
+                                {{ $link['label'] }}
+                                @if($link['active'])<span class="absolute -bottom-0.5 left-0 right-0 mx-auto h-px w-6 bg-[color:var(--gold)]"></span>@endif
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+            </nav>
+            <details class="relative md:hidden" id="mobileNav">
+                <summary class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border hairline text-[color:var(--ink)]" aria-label="Buka menu">
+                    <i class="fas fa-bars text-sm" aria-hidden="true"></i>
+                </summary>
+                <nav aria-label="Navigasi seluler" class="lux-panel absolute right-0 top-12 w-60 rounded-2xl p-2" style="background: var(--nav);">
+                    <ul>
                         @foreach($navLinks as $link)
                             <li>
-                                <a href="{{ $link['href'] }}" class="relative py-2 text-[13px] font-medium tracking-wide transition-colors {{ $link['active'] ? 'text-[color:var(--gold)]' : 'text-[color:var(--muted)] hover:text-[color:var(--ink)]' }}" @if($link['active']) aria-current="page" @endif>
+                                <a href="{{ $link['href'] }}" class="flex items-center justify-between rounded-xl px-4 py-3 text-sm {{ $link['active'] ? 'bg-white/5 text-[color:var(--gold)]' : 'text-[color:var(--ink)] hover:bg-white/5' }}" @if($link['active']) aria-current="page" @endif>
                                     {{ $link['label'] }}
-                                    @if($link['active'])<span class="absolute -bottom-0.5 left-0 right-0 mx-auto h-px w-6 bg-[color:var(--gold)]"></span>@endif
+                                    <i class="fas fa-chevron-right text-[10px] opacity-40" aria-hidden="true"></i>
                                 </a>
                             </li>
                         @endforeach
                     </ul>
                 </nav>
-            </div>
-            <div class="flex shrink-0 items-center gap-2 sm:gap-3">
-                <a href="{{ $linkLogin }}" class="btn-secondary hidden rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] sm:inline-flex sm:px-6">Login</a>
-                <a href="{{ $linkDaftar }}" class="btn-primary rounded-full px-4 py-2 text-xs uppercase tracking-[0.14em] sm:px-6" @if($linkDaftar === '#') rel="nofollow" onclick="return false;" @endif>Daftar</a>
-                <details class="relative lg:hidden" id="mobileNav">
-                    <summary class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border hairline text-[color:var(--ink)]" aria-label="Buka menu">
-                        <i class="fas fa-bars text-sm" aria-hidden="true"></i>
-                    </summary>
-                    <nav aria-label="Navigasi seluler" class="lux-panel absolute right-0 top-12 w-60 rounded-2xl p-2" style="background: var(--nav);">
-                        <ul>
-                            @foreach($navLinks as $link)
-                                <li>
-                                    <a href="{{ $link['href'] }}" class="flex items-center justify-between rounded-xl px-4 py-3 text-sm {{ $link['active'] ? 'bg-white/5 text-[color:var(--gold)]' : 'text-[color:var(--ink)] hover:bg-white/5' }}" @if($link['active']) aria-current="page" @endif>
-                                        {{ $link['label'] }}
-                                        <i class="fas fa-chevron-right text-[10px] opacity-40" aria-hidden="true"></i>
-                                    </a>
-                                </li>
-                            @endforeach
-                        </ul>
-                        <a href="{{ $linkLogin }}" class="btn-secondary mt-2 flex items-center justify-center rounded-xl px-4 py-3 text-xs font-semibold uppercase tracking-[0.14em] sm:hidden">Login</a>
-                    </nav>
-                </details>
-            </div>
+            </details>
         </div>
     </header>
 
@@ -119,8 +106,6 @@
                 <a href="{{ route('home') }}" class="font-display text-3xl font-semibold text-[color:var(--ink)]">{{ $navBrand }}</a>
                 @if(!empty($site['footer_text']))
                     <p class="mt-4 max-w-xl text-sm leading-relaxed text-[color:var(--muted)]">{!! nl2br(e($site['footer_text'])) !!}</p>
-                @else
-                    <p class="mt-4 max-w-xl text-sm leading-relaxed text-[color:var(--muted)]">Referensi RTP live, jam gacor, dan pola gacor slot dari berbagai provider — dirangkum rapi setiap hari.</p>
                 @endif
             </div>
             <nav aria-label="Tautan footer">
@@ -137,7 +122,6 @@
         </div>
     </footer>
     <script>
-        function openSimulator() {}
         (function () {
             var d = document.getElementById('mobileNav');
             if (!d) return;

@@ -22,7 +22,7 @@
         --secondary: {{ $theme['secondary'] ?? '#b30000' }};
         --bg: {{ $theme['bg'] ?? '#111827' }};
         --nav: {{ $theme['nav'] ?? '#1f2937' }};
-        /* Token "luxury": aksen = primary (emas), permukaan = secondary (zamrud) */
+        /* Token desain: aksen = primary (emas), permukaan = secondary (zamrud) */
         --gold: var(--primary);
         --gold-soft: color-mix(in srgb, var(--primary) 70%, #fff 30%);
         --emerald: var(--secondary);
@@ -117,62 +117,9 @@
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--gold) 30%, #222); border-radius: 10px; }
-    @keyframes pulse-zoom {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.06); }
-    }
-    .animate-pulse-zoom {
-        animation: pulse-zoom 2.4s infinite ease-in-out;
-        transform-origin: center;
-    }
-    .category-btn {
-        padding: 0.6rem 1.15rem;
-        border-radius: 999px;
-        font-size: 0.75rem;
-        letter-spacing: .08em;
-        background: rgba(255, 255, 255, 0.025);
-        color: var(--muted);
-        border: 1px solid rgba(255, 255, 255, 0.07);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        transition: color .25s ease, border-color .25s ease, background .25s ease;
-    }
-    .category-btn:hover { color: var(--ink); border-color: var(--line); }
-    .category-btn i { color: color-mix(in srgb, var(--gold) 75%, transparent); }
-    .category-btn.active {
-        background: linear-gradient(135deg, color-mix(in srgb, var(--gold) 22%, transparent), color-mix(in srgb, var(--gold) 8%, transparent));
-        color: #fff;
-        border-color: color-mix(in srgb, var(--gold) 65%, transparent);
-    }
-    .category-btn.active i { color: var(--gold); }
     .custom-scrollbar::-webkit-scrollbar { height: 4px; }
     .custom-scrollbar::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.02); border-radius: 10px; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--line); border-radius: 10px; }
-    .provider-grid {
-        display: grid;
-        grid-template-rows: repeat(2, auto);
-        grid-auto-flow: column;
-        gap: 0.6rem;
-        width: max-content;
-    }
-    @keyframes bar-fill { from { width: 0; } }
-    .bar-fill-anim { animation: bar-fill 1.2s cubic-bezier(.2,.7,.2,1) forwards; }
-    @keyframes shimmer-slide {
-        0% { transform: translateX(-100%); }
-        100% { transform: translateX(100%); }
-    }
-    .shimmer-effect::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
-        animation: shimmer-slide 3s ease-in-out infinite;
-    }
-    @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-    .ticker-track { display: inline-flex; width: max-content; animation: ticker 38s linear infinite; }
-    .ticker:hover .ticker-track { animation-play-state: paused; }
     @keyframes live-blink { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
     .live-dot { animation: live-blink 1.6s ease-in-out infinite; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -182,6 +129,5 @@
     details > summary::-webkit-details-marker { display: none; }
     @media (prefers-reduced-motion: reduce) {
         *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
-        .ticker-track { animation: none; }
     }
 </style>

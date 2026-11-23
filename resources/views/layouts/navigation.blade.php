@@ -3,12 +3,10 @@
         <div class="flex h-16 items-center justify-between">
             <div class="flex min-w-0 items-center gap-4 sm:gap-6">
                 <a href="{{ route('home') }}" class="flex shrink-0 items-center gap-2 text-white">
-                    <img src="https://asset.t99group.com/assets/logo/TOKYO99/favicon.png" alt="" class="h-9 w-9 shrink-0 object-contain" width="36" height="36">
+                    <img src="{{ asset('favicon.ico') }}" alt="" class="h-9 w-9 shrink-0 object-contain" width="36" height="36">
                     <span class="truncate text-base font-extrabold tracking-tight sm:text-lg">{{ config('app.name') }}</span>
                 </a>
                 <a href="{{ route('home') }}" class="hidden text-sm text-gray-400 hover:text-white sm:inline">Beranda</a>
-                <a href="{{ route('testimoni') }}" class="hidden text-sm text-gray-400 hover:text-white sm:inline">Testimoni</a>
-                <a href="{{ route('bukti_jackpot') }}" class="hidden text-sm text-gray-400 hover:text-white sm:inline" title="Bukti Jackpot">Bukti Jackpot</a>
                 @auth
                     <a href="{{ route('admin.dashboard') }}" class="hidden text-sm text-gray-400 hover:text-white sm:inline @if(request()->routeIs('admin.*')) text-primary @endif">Panel</a>
                 @endauth
@@ -35,8 +33,6 @@
     <div :class="{'block': open, 'hidden': ! open}" class="hidden border-t border-white/5 sm:hidden">
         <div class="space-y-1 px-4 py-3">
             <a href="{{ route('home') }}" class="block rounded-lg px-3 py-2 text-gray-300 hover:bg-white/5">Beranda</a>
-            <a href="{{ route('testimoni') }}" class="block rounded-lg px-3 py-2 text-gray-300 hover:bg-white/5">Testimoni</a>
-            <a href="{{ route('bukti_jackpot') }}" class="block rounded-lg px-3 py-2 text-gray-300 hover:bg-white/5">Bukti Jackpot</a>
             @auth
                 <a href="{{ route('admin.dashboard') }}" class="block rounded-lg px-3 py-2 text-gray-300 hover:bg-white/5">Panel</a>
                 <a href="{{ route('admin.halaman.create') }}" class="block rounded-lg px-3 py-2 font-bold text-primary">+ Halaman Baru</a>

@@ -61,17 +61,8 @@ class Setting extends Model
             'brand_name' => null,
             'logo_url' => null,
             'favicon_url' => null,
-            'hero_banner_url' => null,
             'footer_text' => null,
-            'login_url' => null,
-            'register_url' => null,
-            'marquee_text' => null,
-            'theme_preset' => 'crimson',
-            'maxwin_modal_kapital_label' => null,
-            'maxwin_default_kapital' => null,
-            'maxwin_modal_footer_text' => null,
-            'main_sekarang_url' => null,
-            'hajar_sekarang_url' => null,
+            'theme_preset' => 'zamrud-emas',
         ];
     }
 }

@@ -26,12 +26,11 @@ class AppServiceProvider extends ServiceProvider
     {
         View::composer(
             [
-                'layouts.tokyo99',
+                'layouts.site',
                 'layouts.admin',
                 'layouts.app',
+                'layouts.guest',
                 'home',
-                'testimonies.index',
-                'testimonies.bukti-jackpot',
             ],
             function ($view) {
                 $site = Setting::asArray();
