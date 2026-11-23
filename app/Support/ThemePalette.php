@@ -10,6 +10,13 @@ class ThemePalette
     public static function presets(): array
     {
         return [
+            'zamrud-emas' => [
+                'label' => 'Zamrud & Emas (Luxury)',
+                'primary' => '#d4af37',
+                'secondary' => '#0f6b50',
+                'bg' => '#04100c',
+                'nav' => '#081a14',
+            ],
             'crimson' => [
                 'label' => 'Crimson Red',
                 'primary' => '#fb2323',

@@ -1,57 +1,149 @@
+@php
+    $navBrand = $site['brand_name'] ?? config('app.name');
+    $navLogo = $site['logo_url'] ?? 'https://asset.t99group.com/assets/logo/TOKYO99/favicon.png';
+    $urlLogin = $site['login_url'] ?? null;
+    $urlDaftar = $site['register_url'] ?? null;
+    $linkLogin = $urlLogin ? (str_starts_with($urlLogin, 'http') || str_starts_with($urlLogin, '//') ? $urlLogin : url($urlLogin)) : route('login');
+    $linkDaftar = $urlDaftar ? (str_starts_with($urlDaftar, 'http') || str_starts_with($urlDaftar, '//') ? $urlDaftar : url($urlDaftar)) : '#';
+
+    $seoTitle = trim($__env->yieldContent('title')) ?: $navBrand;
+    $seoDesc = trim($__env->yieldContent('meta_description'))
+        ?: 'Info RTP live slot hari ini, jam gacor dan pola gacor terbaru dari berbagai provider di '.$navBrand.'.';
+    $seoImage = $site['hero_banner_url'] ?? $navLogo;
+    $seoUrl = url()->full();
+
+    $navLinks = collect([
+        ['label' => 'Beranda', 'href' => route('home'), 'active' => request()->routeIs('home')],
+        ['label' => 'Testimoni', 'href' => route('testimoni'), 'active' => request()->routeIs('testimoni')],
+        ['label' => 'Bukti Jackpot', 'href' => route('bukti_jackpot'), 'active' => request()->routeIs('bukti_jackpot')],
+    ])->merge(($navPages ?? collect())->map(fn ($p) => [
+        'label' => $p->title,
+        'href' => route('halaman.show', $p->slug),
+        'active' => request()->is('halaman/'.$p->slug),
+    ]));
+@endphp
 <!DOCTYPE html>
 <html lang="id" class="h-full">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('title', $site['brand_name'] ?? config('app.name'))</title>
+    <title>{{ $seoTitle }}</title>
+    <meta name="description" content="{{ $seoDesc }}">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <link rel="canonical" href="{{ $seoUrl }}">
+    <meta name="theme-color" content="{{ $theme['bg'] ?? '#111827' }}">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="id_ID">
+    <meta property="og:site_name" content="{{ $navBrand }}">
+    <meta property="og:title" content="{{ $seoTitle }}">
+    <meta property="og:description" content="{{ $seoDesc }}">
+    <meta property="og:url" content="{{ $seoUrl }}">
+    <meta property="og:image" content="{{ $seoImage }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $seoTitle }}">
+    <meta name="twitter:description" content="{{ $seoDesc }}">
+    <meta name="twitter:image" content="{{ $seoImage }}">
     <link rel="icon" type="image/png" href="{{ $site['favicon_url'] ?? $site['logo_url'] ?? 'https://asset.t99group.com/assets/logo/TOKYO99/favicon.png' }}">
     @include('layouts.partials.tokyo99-assets')
+    <script type="application/ld+json">
+        {!! json_encode([
+            '@context' => 'https://schema.org',
+            '@graph' => [
+                ['@type' => 'Organization', '@id' => url('/').'#organization', 'name' => $navBrand, 'url' => url('/'), 'logo' => $navLogo],
+                ['@type' => 'WebSite', '@id' => url('/').'#website', 'name' => $navBrand, 'url' => url('/'), 'inLanguage' => 'id-ID', 'publisher' => ['@id' => url('/').'#organization']],
+            ],
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}
+    </script>
     @stack('head')
 </head>
-<body class="min-h-screen">
-    @php
-        $navBrand = $site['brand_name'] ?? config('app.name');
-        $navLogo = $site['logo_url'] ?? 'https://asset.t99group.com/assets/logo/TOKYO99/favicon.png';
-        $urlLogin = $site['login_url'] ?? null;
-        $urlDaftar = $site['register_url'] ?? null;
-        $linkLogin = $urlLogin ? (str_starts_with($urlLogin, 'http') || str_starts_with($urlLogin, '//') ? $urlLogin : url($urlLogin)) : route('login');
-        $linkDaftar = $urlDaftar ? (str_starts_with($urlDaftar, 'http') || str_starts_with($urlDaftar, '//') ? $urlDaftar : url($urlDaftar)) : '#';
-    @endphp
-    <nav class="sticky top-0 z-50 flex h-16 items-center border-b border-white/5 glass px-6">
-        <div class="mx-auto flex h-full w-full max-w-7xl items-center justify-between">
-            <div class="flex items-center gap-4">
-                <a href="{{ route('home') }}" class="flex items-center gap-2">
-                    <img src="{{ $navLogo }}" alt="" class="h-10 w-10 shrink-0 object-contain" width="40" height="40">
-                    <span class="text-lg font-extrabold tracking-tight text-white">{{ $navBrand }}</span>
+<body class="flex min-h-screen flex-col">
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[300] focus:rounded-lg focus:bg-black focus:px-4 focus:py-2">Langsung ke konten</a>
+
+    <header class="glass sticky top-0 z-50 border-x-0 border-t-0 hairline">
+        <div class="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-4 px-4 sm:h-[72px] sm:px-6">
+            <div class="flex min-w-0 items-center gap-8">
+                <a href="{{ route('home') }}" class="flex min-w-0 items-center gap-3" aria-label="{{ $navBrand }} — Beranda">
+                    <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border hairline bg-black/30 p-1.5">
+                        <img src="{{ $navLogo }}" alt="Logo {{ $navBrand }}" class="h-full w-full object-contain" width="40" height="40">
+                    </span>
+                    <span class="truncate font-display text-xl font-semibold sm:text-2xl leading-none tracking-wide text-[color:var(--ink)]">{{ $navBrand }}</span>
                 </a>
-                <a href="{{ route('testimoni') }}" class="hidden text-sm text-gray-400 hover:text-white sm:inline">Testimoni</a>
-                <a href="{{ route('bukti_jackpot') }}" class="hidden text-sm text-gray-400 hover:text-white sm:inline">Bukti Jackpot</a>
-                @foreach(($navPages ?? collect()) as $navPage)
-                    <a href="{{ route('halaman.show', $navPage->slug) }}" class="hidden text-sm text-gray-400 hover:text-white sm:inline">{{ $navPage->title }}</a>
-                @endforeach
+                <nav aria-label="Navigasi utama" class="hidden lg:block">
+                    <ul class="flex items-center gap-7">
+                        @foreach($navLinks as $link)
+                            <li>
+                                <a href="{{ $link['href'] }}" class="relative py-2 text-[13px] font-medium tracking-wide transition-colors {{ $link['active'] ? 'text-[color:var(--gold)]' : 'text-[color:var(--muted)] hover:text-[color:var(--ink)]' }}" @if($link['active']) aria-current="page" @endif>
+                                    {{ $link['label'] }}
+                                    @if($link['active'])<span class="absolute -bottom-0.5 left-0 right-0 mx-auto h-px w-6 bg-[color:var(--gold)]"></span>@endif
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </nav>
             </div>
-            <div class="flex space-x-3">
-                <a href="{{ $linkLogin }}" class="rounded-full btn-secondary px-4 py-2 text-sm font-bold sm:px-6">LOGIN</a>
-                <a href="{{ $linkDaftar }}" class="rounded-full btn-primary px-4 py-2 text-sm font-bold sm:px-6" @if($linkDaftar === '#') rel="nofollow" onclick="return false;" @endif>DAFTAR</a>
+            <div class="flex shrink-0 items-center gap-2 sm:gap-3">
+                <a href="{{ $linkLogin }}" class="btn-secondary hidden rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] sm:inline-flex sm:px-6">Login</a>
+                <a href="{{ $linkDaftar }}" class="btn-primary rounded-full px-4 py-2 text-xs uppercase tracking-[0.14em] sm:px-6" @if($linkDaftar === '#') rel="nofollow" onclick="return false;" @endif>Daftar</a>
+                <details class="relative lg:hidden" id="mobileNav">
+                    <summary class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border hairline text-[color:var(--ink)]" aria-label="Buka menu">
+                        <i class="fas fa-bars text-sm" aria-hidden="true"></i>
+                    </summary>
+                    <nav aria-label="Navigasi seluler" class="lux-panel absolute right-0 top-12 w-60 rounded-2xl p-2" style="background: var(--nav);">
+                        <ul>
+                            @foreach($navLinks as $link)
+                                <li>
+                                    <a href="{{ $link['href'] }}" class="flex items-center justify-between rounded-xl px-4 py-3 text-sm {{ $link['active'] ? 'bg-white/5 text-[color:var(--gold)]' : 'text-[color:var(--ink)] hover:bg-white/5' }}" @if($link['active']) aria-current="page" @endif>
+                                        {{ $link['label'] }}
+                                        <i class="fas fa-chevron-right text-[10px] opacity-40" aria-hidden="true"></i>
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
+                        <a href="{{ $linkLogin }}" class="btn-secondary mt-2 flex items-center justify-center rounded-xl px-4 py-3 text-xs font-semibold uppercase tracking-[0.14em] sm:hidden">Login</a>
+                    </nav>
+                </details>
             </div>
         </div>
-    </nav>
+    </header>
 
-    <main id="main" class="mx-auto max-w-7xl px-4 py-8">
+    <main id="main" class="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 sm:py-10">
         @if(session('ok'))
-            <div class="mb-6 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200">{{ session('ok') }}</div>
+            <div class="mb-6 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200" role="status">{{ session('ok') }}</div>
         @endif
         @yield('content')
     </main>
 
-    <footer class="border-t border-white/5 py-8 text-center text-xs text-gray-500">
-        @if(!empty($site['footer_text']))
-            <div class="mx-auto max-w-3xl px-4 text-gray-400">{!! nl2br(e($site['footer_text'])) !!}</div>
-        @endif
-        <p class="mt-2">&copy; {{ date('Y') }} {{ $navBrand }} @if(empty($site['footer_text'])) — {{ __('Beranda; demo lokal') }} @endif</p>
+    <footer class="mt-16 border-t hairline bg-black/20">
+        <div class="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-[1.4fr_1fr]">
+            <div>
+                <a href="{{ route('home') }}" class="font-display text-3xl font-semibold text-[color:var(--ink)]">{{ $navBrand }}</a>
+                @if(!empty($site['footer_text']))
+                    <p class="mt-4 max-w-xl text-sm leading-relaxed text-[color:var(--muted)]">{!! nl2br(e($site['footer_text'])) !!}</p>
+                @else
+                    <p class="mt-4 max-w-xl text-sm leading-relaxed text-[color:var(--muted)]">Referensi RTP live, jam gacor, dan pola gacor slot dari berbagai provider — dirangkum rapi setiap hari.</p>
+                @endif
+            </div>
+            <nav aria-label="Tautan footer">
+                <p class="ornament mb-4 justify-start [&::before]:hidden">Jelajahi</p>
+                <ul class="grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
+                    @foreach($navLinks as $link)
+                        <li><a href="{{ $link['href'] }}" class="text-[color:var(--muted)] transition-colors hover:text-[color:var(--gold)]">{{ $link['label'] }}</a></li>
+                    @endforeach
+                </ul>
+            </nav>
+        </div>
+        <div class="border-t border-white/5">
+            <p class="mx-auto max-w-7xl px-4 py-5 text-center text-xs tracking-wide text-[color:var(--muted)] sm:px-6">&copy; {{ date('Y') }} {{ $navBrand }}. Seluruh hak cipta dilindungi.</p>
+        </div>
     </footer>
     <script>
         function openSimulator() {}
+        (function () {
+            var d = document.getElementById('mobileNav');
+            if (!d) return;
+            document.addEventListener('click', function (e) { if (d.open && !d.contains(e.target)) d.open = false; });
+            document.addEventListener('keydown', function (e) { if (e.key === 'Escape') d.open = false; });
+        })();
     </script>
     @stack('scripts')
 </body>

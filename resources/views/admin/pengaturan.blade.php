@@ -10,7 +10,7 @@
 </div>
 
 <div class="glass mb-6 max-w-3xl rounded-2xl p-6 sm:p-8">
-    <h2 class="text-lg font-bold text-white">Theme controller (6 warna)</h2>
+    <h2 class="text-lg font-bold text-white">Theme controller</h2>
     <p class="mt-1 text-sm text-gray-400">Pilih 1 tema agar warna keseluruhan template selaras.</p>
     <form method="post" action="{{ route('admin.theme.update') }}" class="mt-5 space-y-4">
         @csrf

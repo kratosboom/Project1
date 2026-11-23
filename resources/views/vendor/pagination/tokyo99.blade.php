@@ -1,92 +1,71 @@
-{{-- Pagination putih dengan pemisah vertikal — sesuai tema landing --}}
+{{-- Pagination gelap-emas — sesuai tema landing --}}
 @if ($paginator->hasPages())
+    @php
+        $pgBase = 'inline-flex h-10 min-w-[2.5rem] items-center justify-center rounded-full px-3 text-sm font-medium tabular-nums transition';
+        $pgIdle = $pgBase.' border border-white/10 text-[color:var(--ink)] hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]';
+        $pgOff = $pgBase.' border border-white/5 text-white/25';
+    @endphp
     <nav role="navigation" aria-label="Navigasi halaman" class="w-full max-w-full">
         {{-- Mobile --}}
         <div class="flex items-center justify-between gap-2 sm:hidden">
             @if ($paginator->onFirstPage())
-                <span class="inline-flex items-center rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-semibold text-gray-400 shadow-sm">
-                    Sebelumnya
-                </span>
+                <span class="{{ $pgOff }} px-5">Sebelumnya</span>
             @else
-                <a href="{{ $paginator->previousPageUrl() }}" rel="prev" class="inline-flex items-center rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-semibold text-gray-800 shadow-sm transition hover:bg-gray-50">
-                    Sebelumnya
-                </a>
+                <a href="{{ $paginator->previousPageUrl() }}" rel="prev" class="{{ $pgIdle }} px-5">Sebelumnya</a>
             @endif
 
+            <span class="text-xs text-[color:var(--muted)]">{{ $paginator->currentPage() }} / {{ $paginator->lastPage() }}</span>
+
             @if ($paginator->hasMorePages())
-                <a href="{{ $paginator->nextPageUrl() }}" rel="next" class="inline-flex items-center rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-semibold text-gray-800 shadow-sm transition hover:bg-gray-50">
-                    Berikutnya
-                </a>
+                <a href="{{ $paginator->nextPageUrl() }}" rel="next" class="{{ $pgIdle }} px-5">Berikutnya</a>
             @else
-                <span class="inline-flex items-center rounded-lg border border-gray-200 bg-white/80 px-4 py-2.5 text-sm font-semibold text-gray-400 shadow-sm">
-                    Berikutnya
-                </span>
+                <span class="{{ $pgOff }} px-5">Berikutnya</span>
             @endif
         </div>
 
         {{-- Desktop --}}
-        <div class="hidden flex-col gap-4 sm:flex sm:flex-row sm:items-center sm:justify-between sm:gap-6">
-            <p class="text-sm text-gray-400">
+        <div class="hidden items-center justify-between gap-6 sm:flex">
+            <p class="text-sm text-[color:var(--muted)]">
                 @if ($paginator->firstItem())
                     Menampilkan
-                    <span class="font-semibold text-gray-200">{{ $paginator->firstItem() }}</span>
-                    sampai
-                    <span class="font-semibold text-gray-200">{{ $paginator->lastItem() }}</span>
+                    <span class="font-semibold text-[color:var(--ink)]">{{ $paginator->firstItem() }}</span>
+                    –
+                    <span class="font-semibold text-[color:var(--ink)]">{{ $paginator->lastItem() }}</span>
                     dari
-                    <span class="font-semibold text-gray-200">{{ $paginator->total() }}</span>
+                    <span class="font-semibold text-[color:var(--ink)]">{{ $paginator->total() }}</span>
                     game
                 @else
                     {{ $paginator->count() }} game
                 @endif
             </p>
 
-            <div class="inline-flex divide-x divide-gray-200 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
+            <div class="flex items-center gap-1.5">
                 @if ($paginator->onFirstPage())
-                    <span class="inline-flex items-center px-2.5 py-2 text-gray-300" aria-hidden="true">
-                        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                            <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
-                        </svg>
-                    </span>
+                    <span class="{{ $pgOff }}" aria-hidden="true"><i class="fas fa-chevron-left text-xs"></i></span>
                 @else
-                    <a href="{{ $paginator->previousPageUrl() }}" rel="prev" class="inline-flex items-center px-2.5 py-2 text-gray-700 transition hover:bg-gray-50" aria-label="Halaman sebelumnya">
-                        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
-                        </svg>
-                    </a>
+                    <a href="{{ $paginator->previousPageUrl() }}" rel="prev" class="{{ $pgIdle }}" aria-label="Halaman sebelumnya"><i class="fas fa-chevron-left text-xs" aria-hidden="true"></i></a>
                 @endif
 
                 @foreach ($elements as $element)
                     @if (is_string($element))
-                        <span class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-500">{{ $element }}</span>
+                        <span class="px-2 text-sm text-[color:var(--muted)]">{{ $element }}</span>
                     @endif
 
                     @if (is_array($element))
                         @foreach ($element as $page => $url)
                             @if ($page == $paginator->currentPage())
-                                <span aria-current="page" class="inline-flex min-w-[2.5rem] items-center justify-center bg-gray-200 px-3 py-2 text-sm font-bold text-gray-900">
-                                    {{ $page }}
-                                </span>
+                                <span aria-current="page" class="{{ $pgBase }} btn-primary">{{ $page }}</span>
                             @else
-                                <a href="{{ $url }}" class="inline-flex min-w-[2.5rem] items-center justify-center bg-white px-3 py-2 text-sm font-semibold text-gray-800 transition hover:bg-gray-50" aria-label="Ke halaman {{ $page }}">
-                                    {{ $page }}
-                                </a>
+                                <a href="{{ $url }}" class="{{ $pgIdle }}" aria-label="Ke halaman {{ $page }}">{{ $page }}</a>
                             @endif
                         @endforeach
                     @endif
                 @endforeach
 
                 @if ($paginator->hasMorePages())
-                    <a href="{{ $paginator->nextPageUrl() }}" rel="next" class="inline-flex items-center px-2.5 py-2 text-gray-700 transition hover:bg-gray-50" aria-label="Halaman berikutnya">
-                        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                        </svg>
-                    </a>
+                    <a href="{{ $paginator->nextPageUrl() }}" rel="next" class="{{ $pgIdle }}" aria-label="Halaman berikutnya"><i class="fas fa-chevron-right text-xs" aria-hidden="true"></i></a>
                 @else
-                    <span class="inline-flex items-center px-2.5 py-2 text-gray-300" aria-hidden="true">
-                        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                        </svg>
-                    </span>
+                    <span class="{{ $pgOff }}" aria-hidden="true"><i class="fas fa-chevron-right text-xs"></i></span>
                 @endif
             </div>
         </div>
